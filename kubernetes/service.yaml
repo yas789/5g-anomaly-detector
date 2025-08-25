@@ -1,0 +1,156 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: 5g-anomaly-detector-service
+  labels:
+    app: 5g-anomaly-detector
+    component: ml-service
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-path: "/health"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-interval: "30"
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8000
+    protocol: TCP
+  - name: https
+    port: 443
+    targetPort: 8000
+    protocol: TCP
+  selector:
+    app: 5g-anomaly-detector
+  sessionAffinity: None
+  loadBalancerSourceRanges:
+  # Restrict access to specific IP ranges for security
+  # Replace with your actual allowed CIDR blocks
+  - "10.0.0.0/8"
+  - "172.16.0.0/12"
+  - "192.168.0.0/16"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: 5g-anomaly-detector-internal
+  labels:
+    app: 5g-anomaly-detector
+    component: ml-service
+    service-type: internal
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8000
+    targetPort: 8000
+    protocol: TCP
+  selector:
+    app: 5g-anomaly-detector
+  sessionAffinity: None
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: 5g-anomaly-detector-ingress
+  labels:
+    app: 5g-anomaly-detector
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+  - hosts:
+    - anomaly-detector.yourdomain.com
+    secretName: anomaly-detector-tls
+  rules:
+  - host: anomaly-detector.yourdomain.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: 5g-anomaly-detector-internal
+            port:
+              number: 8000
+      - path: /docs
+        pathType: Prefix
+        backend:
+          service:
+            name: 5g-anomaly-detector-internal
+            port:
+              number: 8000
+      - path: /health
+        pathType: Prefix
+        backend:
+          service:
+            name: 5g-anomaly-detector-internal
+            port:
+              number: 8000
+      - path: /metrics
+        pathType: Prefix
+        backend:
+          service:
+            name: 5g-anomaly-detector-internal
+            port:
+              number: 8000
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: 5g-anomaly-detector-netpol
+  labels:
+    app: 5g-anomaly-detector
+spec:
+  podSelector:
+    matchLabels:
+      app: 5g-anomaly-detector
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: kube-system
+    - namespaceSelector:
+        matchLabels:
+          name: ingress-nginx
+    - podSelector:
+        matchLabels:
+          app: monitoring
+    ports:
+    - protocol: TCP
+      port: 8000
+  egress:
+  - {} # Allow all outbound traffic for model downloads and external APIs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: 5g-anomaly-detector-monitoring
+  labels:
+    app: 5g-anomaly-detector
+    component: monitoring
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8000"
+    prometheus.io/path: "/metrics"
+spec:
+  type: ClusterIP
+  ports:
+  - name: metrics
+    port: 8000
+    targetPort: 8000
+    protocol: TCP
+  selector:
+    app: 5g-anomaly-detector
