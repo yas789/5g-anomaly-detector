@@ -1,0 +1,163 @@
+{
+  "metrics": {
+    "accuracy": 0.955,
+    "precision": 0.6896551724137931,
+    "recall": 1.0,
+    "f1_score": 0.8163265306122449,
+    "specificity": 0.95,
+    "npv": 1.0,
+    "roc_auc": 1.0,
+    "average_precision": 1.0,
+    "mcc": 0.8094272134003794,
+    "false_positive_rate": 0.05,
+    "false_negative_rate": 0.0,
+    "confusion_matrix": {
+      "true_positive": 1000,
+      "false_positive": 450,
+      "false_negative": 0,
+      "true_negative": 8550
+    },
+    "reconstruction_error_stats": {
+      "mean": 28.409137725830078,
+      "std": 103.35240173339844,
+      "min": 0.0074798292480409145,
+      "max": 574.2047119140625,
+      "median": 0.508596658706665
+    }
+  },
+  "detailed_analysis": {
+    "feature_analysis": {
+      "prb_utilization": {
+        "anomaly_mean": 49.47456,
+        "anomaly_std": 44.94460325966365,
+        "normal_mean": 45.19445333333333,
+        "normal_std": 14.930290208075132,
+        "separation_score": 0.07148416336236144
+      },
+      "active_ue_count": {
+        "anomaly_mean": 517.643,
+        "anomaly_std": 485.0485828024639,
+        "normal_mean": 199.9632222222222,
+        "normal_std": 14.184467348592259,
+        "separation_score": 0.6363356305743221
+      },
+      "throughput_mbps": {
+        "anomaly_mean": 483.91341000000006,
+        "anomaly_std": 439.73912325991336,
+        "normal_mean": 300.63596888888884,
+        "normal_std": 79.50667117705906,
+        "separation_score": 0.3529685614619422
+      },
+      "latency_ms": {
+        "anomaly_mean": 70.69485,
+        "anomaly_std": 73.61865329854243,
+        "normal_mean": 10.044172222222223,
+        "normal_std": 7.893747893736785,
+        "separation_score": 0.744066876735339
+      },
+      "handover_success_rate": {
+        "anomaly_mean": 0.569558,
+        "anomaly_std": 0.4276271252788746,
+        "normal_mean": 0.8164999777777777,
+        "normal_std": 0.08919255921420473,
+        "separation_score": 0.47781069570111834
+      },
+      "snr_db": {
+        "anomaly_mean": 19.116809999999997,
+        "anomaly_std": 24.065307809456,
+        "normal_mean": 20.042233333333336,
+        "normal_std": 7.531504458453966,
+        "separation_score": 0.02928850306777061
+      },
+      "packet_loss_rate": {
+        "anomaly_mean": 0.171563546,
+        "anomaly_std": 0.17850831022126656,
+        "normal_mean": 0.019824394111111112,
+        "normal_std": 0.019062607867002,
+        "separation_score": 0.7680236832267981
+      }
+    },
+    "error_analysis": {
+      "normal_errors": {
+        "mean": 0.5582957863807678,
+        "std": 0.4001410901546478,
+        "percentiles": {
+          "25": 0.28571557998657227,
+          "50": 0.4613691568374634,
+          "75": 0.7285492420196533,
+          "95": 1.320585012435913,
+          "99": 2.033647060394287
+        }
+      },
+      "anomaly_errors": {
+        "mean": 279.0667419433594,
+        "std": 192.3681640625,
+        "percentiles": {
+          "25": 76.59678649902344,
+          "50": 404.6112060546875,
+          "75": 453.87060546875,
+          "95": 509.8609924316406,
+          "99": 542.5421752929688
+        }
+      }
+    },
+    "threshold_analysis": {
+      "p90": {
+        "threshold": 6.239631795893024,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0,
+        "predicted_anomalies": 1000
+      },
+      "p95": {
+        "threshold": 404.5275985717772,
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1_score": 0.6666666666666666,
+        "predicted_anomalies": 500
+      },
+      "p97": {
+        "threshold": 445.6519766235351,
+        "precision": 1.0,
+        "recall": 0.3,
+        "f1_score": 0.46153846153846156,
+        "predicted_anomalies": 300
+      },
+      "p98": {
+        "threshold": 466.31292358398446,
+        "precision": 1.0,
+        "recall": 0.2,
+        "f1_score": 0.3333333333333333,
+        "predicted_anomalies": 200
+      },
+      "p99": {
+        "threshold": 489.65345306396483,
+        "precision": 1.0,
+        "recall": 0.1,
+        "f1_score": 0.18181818181818182,
+        "predicted_anomalies": 100
+      },
+      "p99.5": {
+        "threshold": 509.83857955932575,
+        "precision": 1.0,
+        "recall": 0.05,
+        "f1_score": 0.09523809523809523,
+        "predicted_anomalies": 50
+      }
+    },
+    "sample_distribution": {
+      "total_samples": 10000,
+      "true_anomalies": 1000,
+      "predicted_anomalies": 1450,
+      "anomaly_rate_true": 0.1,
+      "anomaly_rate_predicted": 0.145
+    }
+  },
+  "model_info": {
+    "model_path": "models/production_model_20250827_013526.pkl",
+    "threshold": 1.320585012435913,
+    "feature_count": 7,
+    "test_samples": 10000
+  },
+  "timestamp": "2025-08-27T01:35:41.544057"
+}

@@ -1,0 +1,14 @@
+Training History - 20250827_013305
+==================================================
+
+Epochs trained: 20
+Final training loss: 0.627173
+Final validation loss: 0.562592
+
+Evaluation Metrics:
+--------------------
+precision: 0.6897
+recall: 1.0000
+f1_score: 0.8163
+auc_score: 1.0000
+threshold: 1.3374
